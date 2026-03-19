@@ -13,6 +13,26 @@ struct ray {
     float angleOffset = 0.0f;
 };
 
+struct Map {
+    int rows = 10;
+    int cols = 10;
+    std::vector<std::vector<int>> grid;
+    int tileSize = 64;
+
+    Map() {
+        grid.push_back({1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+        grid.push_back({1, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+        grid.push_back({1, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+        grid.push_back({1, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+        grid.push_back({1, 0, 0, 0, 9, 0, 0, 0, 0, 1});
+        grid.push_back({1, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+        grid.push_back({1, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+        grid.push_back({1, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+        grid.push_back({1, 0, 0, 0, 0, 0, 0, 0, 0, 1});
+        grid.push_back({1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+    }
+};
+
 int main(void) {
     // Sets up the player x, y, speed, angle, rotation speed, and FOV, and rayDistance
     float playerX = 400.0;
@@ -34,7 +54,21 @@ int main(void) {
 
     // Stores the walls in the wall vector
     std::vector<Rectangle> walls;
-    walls.push_back({500, 400, 200, 50});
+
+    Map map1;
+
+    for (int row = 0; row < map1.rows; row++) {
+        for(int col = 0; col < map1.cols; col++) {
+            if (map1.grid[row][col] == 1) {
+                Rectangle rect = { col * map1.tileSize, row * map1.tileSize, map1.tileSize, map1.tileSize };
+                walls.push_back(rect);
+            }
+            if (map1.grid[row][col] == 9) {
+                playerX = col * map1.tileSize + map1.tileSize / 2;
+                playerY = row * map1.tileSize / 2;
+            }
+        }
+    }
 
     // Inits the window creation, set as 800x600 and named "Simple Raycaster"
     InitWindow(WIDTH, HEIGHT, "Simple Raycaster");
